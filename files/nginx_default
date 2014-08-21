@@ -3,22 +3,26 @@ server {
     # SSL Listen port
     listen 443 ssl;
 
-    server_name .example.com;
+    server_name www.example.com test.example.com;
 
     # Certificates
     ssl_certificate /etc/nginx/ssl/server.crt;
     ssl_certificate_key /etc/nginx/ssl/server.key;
 
-    # Resumption
-    ssl_session_cache shared:SSL:10m;
-    # Timeout
-    ssl_session_timeout 10m;
+    ssl_session_cache shared:ssl_session_cache:1M;
+    ssl_session_timeout 60m;
 
     # Security options
-    ssl_ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-RC4-SHA:ECDHE-RSA-RC4-SHA:ECDH-ECDSA-RC4-SHA:ECDH-RSA-RC4-SHA:ECDHE-RSA-AES256-SHA:RC4-SHA;
+    ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256 ECDHE-ECDSA-AES256-GCM-SHA384 ECDHE-RSA-AES128-GCM-SHA256 ECDHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES128-GCM-SHA256 DHE-RSA-AES256-GCM-SHA384 ECDHE-ECDSA-AES128-SHA ECDHE-ECDSA-AES256-SHA ECDHE-ECDSA-DES-CBC3-SHA ECDHE-RSA-AES128-SHA ECDHE-RSA-AES256-SHA ECDHE-RSA-DES-CBC3-SHA DHE-RSA-AES128-SHA DHE-RSA-AES256-SHA EDH-RSA-DES-CBC3-SHA AES128-GCM-SHA256 AES256-GCM-SHA384 AES128-SHA AES256-SHA DES-CBC3-SHA";
     ssl_prefer_server_ciphers on;
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
+    # nginx 1.4 or newer
+    ssl_stapling on;
+
+    # HSTS policies are persistent; learn more about HSTS
+    # before enabling the following rule for best security.
+    add_header Strict-Transport-Security "max-age=31536000;includeSubDomains";
 
     # Proxy Pass to Varnish
     # Add headers to recognize SSL
@@ -42,6 +46,16 @@ server {
 
     # rewrite all non SSL traffic to SSL
     rewrite ^(.*) https://$host$request_uri permanent;
+}
+
+# force www.example.com instead of example.com
+server {
+
+  listen 443 ssl;
+
+  server_name example.com;
+
+  rewrite ^/(.*) https://www.example.com/$1 permanent;
 }
 
 # VirtualHost #1
