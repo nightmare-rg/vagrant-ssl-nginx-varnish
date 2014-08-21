@@ -1,7 +1,9 @@
 vagrant-ssl-nginx-varnish
 =========================
 
-Vagrant Box for testing SSL with nginx and varnish (offloading SSL) with subdomains ans wildcard certificate 
+Vagrant Box for testing SSL with nginx and varnish (offloading SSL) with subdomains and wildcard certificate.
+
+Includes Perfect Forward Secrecy, HSTS and OCSP Stapling. 
 
 Usage:
 
