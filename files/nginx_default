@@ -71,10 +71,13 @@ server {
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
   # nginx 1.4 or newer
-  ssl_stapling on;
+  # works only with official certs
+  # http://freiburg79.de/ocsp-stapling-mit-nginx/
+  #ssl_stapling on;
 
   # HSTS policies are persistent; learn more about HSTS
   # before enabling the following rule for best security.
+  # https://hstspreload.appspot.com
   add_header Strict-Transport-Security "max-age=31536000;includeSubDomains";
 
   rewrite ^/(.*) https://www.example.com/$1 permanent;
