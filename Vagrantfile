@@ -9,7 +9,9 @@ aptitude update
 aptitude safe-upgrade -y
 aptitude install -y apt-transport-https curl
 curl https://repo.varnish-cache.org/debian/GPG-key.txt | apt-key add -
-echo "deb https://repo.varnish-cache.org/debian/ wheezy varnish-3.0" >> /etc/apt/sources.list.d/varnish-cache.list
+echo "deb https://repo.varnish-cache.org/debian/ wheezy varnish-3.0" > /etc/apt/sources.list.d/varnish-cache.list
+curl http://www.dotdeb.org/dotdeb.gpg | apt-key add -
+echo "deb http://packages.dotdeb.org wheezy all" > /etc/apt/sources.list.d/dotdeb.list
 aptitude update
 aptitude install -y varnish nginx php5-fpm openssl
 mkdir -p /etc/nginx/ssl
